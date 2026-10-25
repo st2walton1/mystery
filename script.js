@@ -9,10 +9,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const navToggle = document.querySelector(".nav-toggle");
   const siteNav = document.querySelector("#site-nav");
   if (navToggle && siteNav) {
+    const closeNavigation = () => {
+      navToggle.setAttribute("aria-expanded", "false");
+      siteNav.classList.remove("is-open");
+    };
+
     navToggle.addEventListener("click", () => {
       const isExpanded = navToggle.getAttribute("aria-expanded") === "true";
       navToggle.setAttribute("aria-expanded", String(!isExpanded));
       siteNav.classList.toggle("is-open", !isExpanded);
+    });
+
+    // Close the menu after choosing a destination or pressing Escape.
+    siteNav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeNavigation);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeNavigation();
+    });
+    // Avoid a stale mobile-menu state when rotating or resizing to desktop.
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 760) closeNavigation();
     });
   }
 
